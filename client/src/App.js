@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import Header from "./components/nav/Header";
 
 const App = ({match}) => {
+    console.log('match', match)
   return (
       <>
           <Header />
@@ -22,6 +23,7 @@ const App = ({match}) => {
               <Route exact path={routes.home} component={ () => <Home />} />
               <Route exact path={routes.login} component={ () => <Login />} />
               <Route exact path={routes.register} component={ () => <Register />} />
+              <asd>Asdasdds</asd>
           </Switch>
       </>
   )
