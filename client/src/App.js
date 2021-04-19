@@ -13,9 +13,7 @@ import Register from "./pages/Auth/Register";
 import Home from "./pages/Home";
 import Header from "./components/nav/Header";
 
-
 const App = ({match}) => {
-    console.log('props', match)
   return (
       <>
           <Header />
