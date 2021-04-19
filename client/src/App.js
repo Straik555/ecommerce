@@ -1,6 +1,6 @@
 //Core
 import React from "react";
-import {Switch, Route, Redirect, Link} from 'react-router-dom';
+import {Switch, Route, Redirect} from 'react-router-dom';
 
 //Utils
 import {routes} from "./routes";
@@ -8,6 +8,7 @@ import {routes} from "./routes";
 //Auth
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+
 
 //Page
 import Home from "./pages/Home";
@@ -23,7 +24,7 @@ const App = ({match}) => {
               <Route exact path={routes.home} component={ () => <Home />} />
               <Route exact path={routes.login} component={ () => <Login />} />
               <Route exact path={routes.register} component={ () => <Register />} />
-              <asd>Asdasdds</asd>
+              <Route render={() => <h2>Page not found</h2>} />
           </Switch>
       </>
   )
