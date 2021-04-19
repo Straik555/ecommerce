@@ -1,8 +1,33 @@
+//Core
+import React from "react";
+import {Switch, Route, Redirect, Link} from 'react-router-dom';
 
-export const App = () => {
+//Utils
+import {routes} from "./routes";
+
+//Auth
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
+
+//Page
+import Home from "./pages/Home";
+import Header from "./components/nav/Header";
+
+
+const App = ({match}) => {
+    console.log('props', match)
   return (
-      <div>
-        Hello
-      </div>
+      <>
+          <Header />
+          <Switch>
+              <Route exact path="/" render={() => (<Redirect to={routes.home} />)} />
+              <Route exact path={routes.home} component={ () => <Home />} />
+              <Route exact path={routes.login} component={ () => <Login />} />
+              <Route exact path={routes.register} component={ () => <Register />} />
+              <Route render={() => <h2>Page not found</h2>} />
+          </Switch>
+      </>
   )
 }
+
+export default App;
