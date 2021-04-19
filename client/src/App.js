@@ -22,7 +22,6 @@ const App = ({match}) => {
               <Route exact path={routes.home} component={ () => <Home />} />
               <Route exact path={routes.login} component={ () => <Login />} />
               <Route exact path={routes.register} component={ () => <Register />} />
-              <Route render={() => <h2>Page not found</h2>} />
           </Switch>
       </>
   )
