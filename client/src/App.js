@@ -14,11 +14,16 @@ import Register from "./pages/Auth/Register";
 import Home from "./pages/Home";
 import Header from "./components/nav/Header";
 
+//Style
+import {ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
+
 const App = ({match}) => {
     console.log('match', match)
   return (
       <>
           <Header />
+          <ToastContainer />
           <Switch>
               <Route exact path="/" render={() => (<Redirect to={routes.home} />)} />
               <Route exact path={routes.home} component={ () => <Home />} />
