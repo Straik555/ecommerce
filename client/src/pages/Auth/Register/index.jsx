@@ -29,9 +29,7 @@ const Register = () => {
         window.localStorage.setItem('emailForRegistration', email)
     //    clear state
         setEmail('')
-        setTimeout(function (){
-            setPages(true)
-        }, 5000)
+        setPages(true)
 
     }
 
