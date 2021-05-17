@@ -3,6 +3,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router} from 'react-router-dom'
 
+//Redux
+import {Provider} from "react-redux";
+import {PersistGate} from "redux-persist/integration/react";
+import {store, persistors} from './store';
+
 //Component
 import App from './App';
 
@@ -10,9 +15,13 @@ import App from './App';
 import "antd/dist/antd.css"
 
 ReactDOM.render(
-    <Router>
-        <App />
-    </Router>,
+    <Provider store={store}>
+        <PersistGate persistor={persistors}>
+            <Router>
+                <App />
+            </Router>
+        </PersistGate>
+    </Provider>,
   document.getElementById('root')
 );
 

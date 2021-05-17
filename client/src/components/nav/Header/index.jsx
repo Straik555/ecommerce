@@ -12,11 +12,8 @@ const { SubMenu, Item } = Menu;
 
 const Header = ({ match}) => {
     const location = useLocation();
-    console.log('location.pathname', location.pathname.indexOf('/home'))
     const path = LinkNav.map(el => location.pathname.indexOf(el.router) ? el.router : '/home')
     const [current, setCurrent] = useState(path);
-    console.log('curent', current)
-    // console.log('loc', location.pathname)
     useEffect(() => {
         setCurrent(location.pathname)
     }, [location])

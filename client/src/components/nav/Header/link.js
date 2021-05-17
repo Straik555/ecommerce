@@ -32,11 +32,11 @@ export const LinkDropDown = {
     dropdown: [
         {
             name: 'Setting 1',
-            router: '/setting 1'
+            router: '/setting1'
         },
         {
             name: 'Setting 2',
-            router: '/setting 2'
+            router: '/setting2'
         }
     ]
 }
