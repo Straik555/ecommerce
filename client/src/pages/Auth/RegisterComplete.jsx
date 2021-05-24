@@ -1,6 +1,6 @@
 //Core
 import React, {useState, useEffect} from "react";
-import {useHistory} from 'react-router-dom'
+import {useHistory, Redirect} from 'react-router-dom'
 
 //Style
 import {toast} from "react-toastify";
@@ -8,10 +8,15 @@ import {toast} from "react-toastify";
 //Auth
 import {auth} from "../../firebase";
 
+//Redux
+import {useSelector} from "react-redux";
+
 const RegisterComplete = ({}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const history = useHistory()
+
+    const {isLogin} = useSelector(state => ({...state.userReducer}))
 
     useEffect(() => {
         setEmail(localStorage.getItem('emailForRegistration'));
@@ -42,14 +47,10 @@ const RegisterComplete = ({}) => {
                 const idTokenResult = await user.getIdTokenResult()
             // style message
                 toast.success('Password set successfully')
-            //    redux store
-                console.log('user', user)
-                console.log('token', idTokenResult)
             //    redirect
                 history.push('/')
             }
         } catch (error){
-            console.log('error', error)
             // style message
                 toast.error(error.message)
         }
@@ -79,6 +80,11 @@ const RegisterComplete = ({}) => {
             </form>
         )
     }
+
+    if(isLogin){
+        return <Redirect to={'/'} />
+    }
+
     return (
         <div className={'container p-5'}>
             <div className="row">

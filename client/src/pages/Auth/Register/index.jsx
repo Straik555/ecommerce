@@ -1,5 +1,5 @@
 //Core
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
 //Firebase
 import {auth} from "../../../firebase";
@@ -11,18 +11,19 @@ import {Redirect} from "react-router-dom";
 //URL
 import {URL} from '../../../url'
 
-const Register = () => {
+//Config
+import {config} from "../../../_config";
+import {useSelector} from "react-redux";
 
+const Register = () => {
     const [email, setEmail] = useState('')
     const [pages, setPages] = useState(false)
+    const {isLogin} = useSelector(state => ({...state.userReducer}))
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const config = {
-            url: URL.register,
-            handleCodeInApp: true,
-        };
-        await auth.sendSignInLinkToEmail(email, config)
+
+        await auth.sendSignInLinkToEmail(email, config(URL.register))
         toast.success(`Email is sent to ${email}. Click the link to complete your registration.`)
 
     //  save user email in local storage
@@ -42,7 +43,9 @@ const Register = () => {
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                     autoFocus
+                    placeholder={'Your email'}
                 />
+                <br />
 
                 <button type={'submit'} className={'btn btn-raised'}>
                     Register
@@ -52,6 +55,9 @@ const Register = () => {
     }
     if(pages){
         return <Redirect to={'/login'} />
+    }
+    if(isLogin){
+        return <Redirect to={'/'} />
     }
     return (
         <div className={'container p-5'}>

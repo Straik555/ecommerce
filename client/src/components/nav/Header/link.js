@@ -37,6 +37,11 @@ export const LinkDropDown = {
         {
             name: 'Setting 2',
             router: '/setting2'
+        },
+        {
+            name: 'LogoOut',
+            router: '/',
+            icon: <UserOutlined />
         }
     ]
 }
