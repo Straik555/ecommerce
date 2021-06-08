@@ -8,15 +8,19 @@ import {toast} from "react-toastify";
 //Auth
 import {auth} from "../../firebase";
 
-//Redux
-import {useSelector} from "react-redux";
+//Actions
+import {userLogInFirebase} from "../../_actions/actions";
 
-const RegisterComplete = ({}) => {
+//Redux
+import {connect} from "react-redux";
+
+//Function
+import {createOrUpdateUser} from '../../functions/auth'
+
+const RegisterComplete = ({isLogin, userLogInFirebase}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const history = useHistory()
-
-    const {isLogin} = useSelector(state => ({...state.userReducer}))
 
     useEffect(() => {
         setEmail(localStorage.getItem('emailForRegistration'));
@@ -45,6 +49,18 @@ const RegisterComplete = ({}) => {
                 const user = auth.currentUser
                 await user.updatePassword(password)
                 const idTokenResult = await user.getIdTokenResult()
+                createOrUpdateUser(idTokenResult.token)
+                    .then(res => {
+                        userLogInFirebase(
+                            res.data._id,
+                            res.data.name,
+                            user.email,
+                            idTokenResult.token,
+                            res.data.role,
+                            res.data.picture
+                        )
+                    })
+                    .catch(error => console.log('ERROR', error))
             // style message
                 toast.success('Password set successfully')
             //    redirect
@@ -97,4 +113,8 @@ const RegisterComplete = ({}) => {
     )
 }
 
-export default RegisterComplete
+const mapStateToProps = ({userReducer:{isLogin}}) => {
+    return {isLogin}
+}
+
+export default connect(mapStateToProps, {userLogInFirebase})(RegisterComplete);

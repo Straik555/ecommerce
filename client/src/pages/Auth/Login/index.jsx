@@ -1,36 +1,48 @@
 //Core
-import React, {useState, useEffect} from "react";
-import {Link} from 'react-router-dom'
+import React, {useState} from "react";
+import {useHistory} from 'react-router-dom';
 
 //Firebase
 import {auth, googleAuthProvider} from "../../../firebase";
 
 //Style
 import {toast} from "react-toastify";
-import {Redirect} from "react-router-dom";
-import {Button} from "antd";
-
-//Icon
-import {MailOutlined, GoogleOutlined} from '@ant-design/icons'
 
 //Actions
 import {userLogInFirebase} from "../../../_actions/actions";
+import {IS_LOADING} from "../../../actionsType";
 
 //Redux
-import {connect, useSelector} from "react-redux";
+import {connect, useDispatch} from "react-redux";
+
+//Function
+import {createOrUpdateUser, roleBasedRedirect} from '../../../functions/auth'
+
+import {AuthLogin} from "./form";
 
 const Login = ({userLogInFirebase}) => {
     const [loading, setLoading] = useState(false)
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const {isLogin} = useSelector(state => ({...state.userReducer}))
+    const history = useHistory();
+    const dispatch = useDispatch();
 
     const googleLogin = async () => {
         auth.signInWithPopup(googleAuthProvider)
             .then(async result => {
                 const {user} = result
                 const idTokenResult = await user.getIdTokenResult()
-                userLogInFirebase(user, idTokenResult.token)
+                createOrUpdateUser(idTokenResult.token)
+                    .then(res => {
+                        userLogInFirebase(
+                            res.data._id,
+                            res.data.name,
+                            user.email,
+                            idTokenResult.token,
+                            res.data.role,
+                            res.data.picture
+                        )
+                        roleBasedRedirect(res, history);
+                    })
+                    .catch(error => console.log('ERROR', error))
                 toast.success(`Hello ${user.displayName}`)
             })
             .catch(error => {
@@ -38,92 +50,49 @@ const Login = ({userLogInFirebase}) => {
             })
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async (email, password) => {
         setLoading(true)
         try{
             const result = await auth.signInWithEmailAndPassword(email, password);
             const {user} = result;
             const idTokenResult = await user.getIdTokenResult();
-            userLogInFirebase(user, idTokenResult.token)
+            createOrUpdateUser(idTokenResult.token)
+                .then(res => {
+                    dispatch({
+                        type: IS_LOADING
+                    })
+                   userLogInFirebase(
+                       res.data._id,
+                       res.data.name,
+                       user.email,
+                       idTokenResult.token,
+                       res.data.role,
+                       res.data.picture
+                   )
+                    roleBasedRedirect(res, history);
+                })
+                .catch(error => console.log('ERROR', error))
+
             toast.success(`Hello ${user.displayName ? user.displayName : user.email }`)
-            // setPage(true)
         } catch (error){
-            // setPage(false)
             setLoading(false)
             toast.error(error.message)
         }
     }
-    if(isLogin){
-        return <Redirect to={'/'} />
-    }
 
-    const loginForm = () => {
-        return (
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <input
-                        type="email"
-                        className={'form-control'}
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        autoFocus
-                        placeholder={'Your email'}
-                    />
-                </div>
-                <div className="form-group">
-                    <input
-                        type='password'
-                        className={'form-control'}
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        placeholder={'Your password'}
-                    />
-                </div>
-                <br />
-
-                <Button
-                    onClick={handleSubmit}
-                    type={'primary'}
-                    className={'mb-3'}
-                    block
-                    shape={'round'}
-                    icon={<MailOutlined />}
-                    size={'large'}
-                    disabled={!email || password.length < 6}
-                >
-                    Login with email/Password
-                </Button>
-                <Button
-                    onClick={googleLogin}
-                    type={'danger'}
-                    className={'mb-3'}
-                    block
-                    shape={'round'}
-                    icon={<GoogleOutlined />}
-                    size={'large'}
-                >
-                    Login with Google
-                </Button>
-                <Link
-                    to={'/forgot/password'}
-                    className={'float-right text-danger'}
-                >
-                    Forgot password
-                </Link>
-            </form>
-        )
-    }
         return (
         <div className={'container p-5'}>
             <div className="row">
                 <div className="col-md-6 offset-md-3">
+
                     {
-                        !loading ?
-                            <h4>Login</h4> :
-                            <h4 className={'text-danger'}>Loading...</h4>
+                        !loading ? <h4>Login</h4> : <h4 className="text-danger">Loadding...</h4>
                     }
-                    {loginForm()}
+
+                    <AuthLogin
+                        handleSubmitForm={handleSubmit}
+                        googleLoginForm={googleLogin}
+                    />
                 </div>
             </div>
         </div>

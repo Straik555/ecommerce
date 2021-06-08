@@ -1,5 +1,5 @@
 //Core
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 
 //Firebase
 import {auth} from "../../../firebase";
@@ -15,13 +15,14 @@ import {URL} from '../../../url'
 import {config} from "../../../_config";
 import {useSelector} from "react-redux";
 
+//Form
+import {AuthRegister} from "./RegisterForm";
+
 const Register = () => {
-    const [email, setEmail] = useState('')
     const [pages, setPages] = useState(false)
     const {isLogin} = useSelector(state => ({...state.userReducer}))
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleSubmit = async (email) => {
 
         await auth.sendSignInLinkToEmail(email, config(URL.register))
         toast.success(`Email is sent to ${email}. Click the link to complete your registration.`)
@@ -29,30 +30,29 @@ const Register = () => {
     //  save user email in local storage
         window.localStorage.setItem('emailForRegistration', email)
     //    clear state
-        setEmail('')
         setPages(true)
 
     }
 
-    const registerForm = () => {
-        return (
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    className={'form-control'}
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    autoFocus
-                    placeholder={'Your email'}
-                />
-                <br />
-
-                <button type={'submit'} className={'btn btn-raised'}>
-                    Register
-                </button>
-            </form>
-        )
-    }
+    // const registerForm = () => {
+    //     return (
+    //         <form onSubmit={handleSubmit}>
+    //             <input
+    //                 type="email"
+    //                 className={'form-control'}
+    //                 value={email}
+    //                 onChange={e => setEmail(e.target.value)}
+    //                 autoFocus
+    //                 placeholder={'Your email'}
+    //             />
+    //             <br />
+    //
+    //             <button type={'submit'} className={'btn btn-raised'}>
+    //                 Register
+    //             </button>
+    //         </form>
+    //     )
+    // }
     if(pages){
         return <Redirect to={'/login'} />
     }
@@ -64,7 +64,8 @@ const Register = () => {
             <div className="row">
                 <div className="col-md-6 offset-md-3">
                     <h4>Register</h4>
-                    {registerForm()}
+                    {/*{registerForm()}*/}
+                    <AuthRegister handleSubmitForm={handleSubmit}/>
                 </div>
             </div>
         </div>

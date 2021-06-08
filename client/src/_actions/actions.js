@@ -11,12 +11,16 @@ export const userLogOutFirebase = () => dispatch => {
     });
 }
 
-export const userLogInFirebase = (user, idTokenResult) => dispatch => {
+export const userLogInFirebase = (id, name, email, token, role, picture) => dispatch => {
     return dispatch({
         type: LOGGER_IN_USER,
         payload: {
-            email: user.email,
-            token: idTokenResult
+            id,
+            name,
+            email,
+            token,
+            role,
+            picture
         }
     })
 }

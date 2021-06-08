@@ -1,47 +1,62 @@
 //Icons
 import {
     AppstoreOutlined,
-    SettingOutlined,
-    UserAddOutlined,
-    UserOutlined
+    DesktopOutlined,
+    HistoryOutlined,
+    UnorderedListOutlined,
+    EditOutlined,
+    FolderOutlined,
+    TagOutlined,
+    SaveOutlined
 } from '@ant-design/icons';
 
-export const LinkNav = [{
-        name: 'Home',
+export const AdminNavLink = [
+    {
+        name: 'Dashboard',
         icon: <AppstoreOutlined />,
-        router: '/home',
-        className: 'float-left'
+        router: '/admin/dashboard'
     },
     {
-        name: 'Redister',
-        icon: <UserAddOutlined />,
-        router: '/register',
-        className: 'float-right'
+        name: 'Product',
+        icon: <DesktopOutlined />,
+        router: '/admin/product'
     },
     {
-        name: 'Login',
-        icon: <UserOutlined />,
-        router: '/login',
-        className: 'float-right'
+        name: 'Category',
+        icon: <FolderOutlined />,
+        router: '/admin/category'
+    },
+    {
+        name: 'Sub Category',
+        icon: <SaveOutlined />,
+        router: '/admin/sub'
+    },
+    {
+        name: 'Coupon',
+        icon: <TagOutlined />,
+        router: '/admin/coupon'
+    },
+    {
+        name: 'Password',
+        icon: <EditOutlined />,
+        router: '/user/password'
     },
 ]
 
-export const LinkDropDown = {
-    name: 'User Name',
-    icon: <SettingOutlined />,
-    dropdown: [
-        {
-            name: 'Setting 1',
-            router: '/setting1'
-        },
-        {
-            name: 'Setting 2',
-            router: '/setting2'
-        },
-        {
-            name: 'LogoOut',
-            router: '/',
-            icon: <UserOutlined />
-        }
-    ]
-}
+export const UserNavLink = [
+    {
+        name: 'History',
+        icon: <HistoryOutlined />,
+        router: '/user/history'
+    },
+    {
+        name: 'Password',
+        icon: <EditOutlined />,
+        router: '/user/password'
+    },
+    {
+        name: 'Wishlist',
+        icon: <UnorderedListOutlined />,
+        router: '/user/wishlist'
+    },
+]

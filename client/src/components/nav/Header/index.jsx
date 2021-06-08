@@ -8,11 +8,8 @@ import {userLogOutFirebase} from "../../../_actions/actions";
 //Design
 import { Menu } from 'antd';
 
-//Router
-import {LinkNav} from "./link";
-
 //Redux
-import {connect, useSelector} from "react-redux";
+import {connect} from "react-redux";
 
 //Icon
 import {
@@ -23,17 +20,14 @@ import {
     UserOutlined
 } from "@ant-design/icons";
 
-
 const { SubMenu, Item } = Menu;
 
-const Header = ({userLogOutFirebase}) => {
+const Header = ({userLogOutFirebase, user, isLogin}) => {
     const location = useLocation();
-    const path = LinkNav.map(el => location.pathname.indexOf(el.router) ? el.router : '/home')
-    const [current, setCurrent] = useState(path);
-    const {user, isLogin} = useSelector((state) => ({...state.userReducer}))
+    const [current, setCurrent] = useState('/home');
     useEffect(() => {
-        setCurrent(location.pathname)
-    }, [location])
+            setCurrent(location.pathname)
+    }, [location.pathname])
     const handleClick = e => {
         setCurrent(e.key)
     }
@@ -41,57 +35,78 @@ const Header = ({userLogOutFirebase}) => {
         userLogOutFirebase()
     }
     return (
-        <div className={'container'}>
-            <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
-                <Item key={'home'} icon={<AppstoreOutlined />} className={'float-left'}>
+        <Menu onClick={handleClick} selectedKeys={[current]} mode="horizontal">
+                <Item key={'/home'} icon={<AppstoreOutlined />} className={'float-left'}>
                     <Link to={'/home'}>
                         Home
                     </Link>
                 </Item>
                 {!isLogin &&
-                <Item key={'register'} icon={<UserAddOutlined />} className={'float-right'}>
+                <Item key={'/register'} icon={<UserAddOutlined />} className={'float-right'}>
                     <Link to={'/register'}>
                         Redister
                     </Link>
                 </Item>
                 }
                 {!isLogin &&
-                <Item key={'login'} icon={<UserOutlined />} className={'float-right'}>
-                    <Link to={'/login'}>
-                        Login
-                    </Link>
-                </Item>
+                    <Item
+                        key={'/login'}
+                        icon={<UserOutlined />}
+                        className={'float-right'}
+                    >
+                        <Link to={'/login'}>
+                            Login
+                        </Link>
+                    </Item>
                 }
                 {
                     isLogin &&
                     <SubMenu
                         icon={<SettingOutlined />}
                         title={
-                            user.email &&
-                            user.email.split('@')[0]
+                            // user.email && user.email.split('@')[0]
+                            user.name && user.name
                         }
                         className={'float-right'}
+                        key={'sub1'}
                     >
-                        <Item key={'setting_one'}>
-                            <Link to={'/setting_one'}>Setting 1</Link>
-                        </Item>
-                        <Item key={'setting_two'}>
-                            <Link to={'/setting_two'}>Setting 2</Link>
-                        </Item>
-                        <Item key={'logout'} icon={<LogoutOutlined />} onClick={logOut}>
+                        {
+                            user && user.role === 'subscriber' &&
+                            <Item
+                                key={'/user/history'}
+                                icon={<AppstoreOutlined />}
+                            >
+                            <Link to={'/user/history'}>Dashboard</Link>
+                            </Item>
+                        }
+
+                        {
+                            user && user.role === 'admin' &&
+                            <Item
+                                key={'/admin/dashboard'}
+                                icon={<AppstoreOutlined />}
+                            >
+                                <Link to={'/admin/dashboard'}>Dashboard</Link>
+                            </Item>
+                        }
+
+                        <Item
+                            key={'logout'}
+                            icon={<LogoutOutlined />}
+                            onClick={logOut}
+                        >
                             <Link to={'/login'}>LogoOut</Link>
                         </Item>
                     </SubMenu>
                 }
 
             </Menu>
-        </div>
     )
 
 }
 
-const mapStateToProps = () => {
-    return{}
+const mapStateToProps = ({userReducer: {user, isLogin}}) => {
+    return{user, isLogin}
 }
 
 export default connect(mapStateToProps, {userLogOutFirebase})(Header);

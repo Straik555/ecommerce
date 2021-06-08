@@ -1,0 +1,28 @@
+.button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 40px;
+    padding: 6.4px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-top: 20px;
+    color: #ffffff;
+    border-radius: 50px;
+}
+
+.button.handler{
+    background: #1890ff;
+}
+.button.google{
+    background: #ff4d4f;
+}
+.link{
+    display: flex;
+    justify-content: flex-end;
+    width: 400px;
+    color: #ff4d4f;
+    margin-top: 20px;
+}
